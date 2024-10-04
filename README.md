@@ -6,7 +6,7 @@
 - pipenv shell
 - pytest
 - pytest -x
-- Debugging with `print()` and `ipdb`
+- Debugging with `print()` and `ipdb.set_trace()`
 - Python data types (`str`, `int`, `float`, `bool`, `None`)
 - Control Flow: Operators, Conditional Statements, Loops
 - Functions in Python
