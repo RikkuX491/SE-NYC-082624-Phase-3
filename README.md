@@ -11,7 +11,7 @@
 - Control Flow: Operators, Conditional Statements, Loops
 - Functions in Python
 - Using `raise Exception` to raise an Exception
-- Using `raise TypeError` to raise an Exception
+- Using `raise TypeError` to raise an TypeError
 - Using `raise ValueError` to raise a ValueError
 - Handling errors with `try` and `except`
 
