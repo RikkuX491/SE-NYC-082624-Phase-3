@@ -9,7 +9,7 @@
 - Self
 - Object properties
 - Using the `@property` decorator
-- Attribute functions: `get_attr()`, `set_attr()`, `has_attr()`, `del_attr()`
+- Attribute functions: `getattr()`, `setattr()`, `hasattr()`, `delattr()`
 - Modifying the `__repr__` instance method for a class
 - Object Inheritance
 - `super()`
