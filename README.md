@@ -12,7 +12,7 @@
 |2 | Python Data Structures                      |[02_starter](https://github.com/RikkuX491/SE-NYC-082624-Phase-3/tree/02_starter)|[02_example_code](https://github.com/RikkuX491/SE-NYC-082624-Phase-3/tree/02_example_code)|[02_solution](https://github.com/RikkuX491/SE-NYC-082624-Phase-3/tree/02_solution)|
 |3 | Object Oriented Programming in Python       |[03_starter](https://github.com/RikkuX491/SE-NYC-082624-Phase-3/tree/03_starter)|[03_example_code](https://github.com/RikkuX491/SE-NYC-082624-Phase-3/tree/03_example_code)|[03_solution](https://github.com/RikkuX491/SE-NYC-082624-Phase-3/tree/03_solution)|
 |4 | OOP Part 2: Class Methods & Class Variables |[04_starter](https://github.com/RikkuX491/SE-NYC-082624-Phase-3/tree/04_starter)|[04_example_code](https://github.com/RikkuX491/SE-NYC-082624-Phase-3/tree/04_example_code)|[04_solution](https://github.com/RikkuX491/SE-NYC-082624-Phase-3/tree/04_solution)|
-|5 | Object Relationships                        ||||
+|5 | Object Relationships                        |[05_starter](https://github.com/RikkuX491/SE-NYC-082624-Phase-3/tree/05_starter)|||
 |6 | SQL Fundamentals & Table Relations          ||||
 |7 | Object-Relational Mapping                   ||||
 |8 | Python CLI                                  ||||
