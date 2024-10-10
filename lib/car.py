@@ -2,11 +2,23 @@ import ipdb
 
 class Car:
     
+    # Deliverable # 2 solution code
+    all = []
+
     def __init__(self, make, model, year, horn_volume=1):
         self.make = make
         self.model = model
         self.year = year
         self.horn_volume = horn_volume
+        
+        # Deliverable # 2 solution code
+        Car.all.append(self)
+
+    # Deliverable # 3 solution code
+    @classmethod
+    def average_year(cls):
+        year_list = [element.year for element in cls.all]
+        return sum(year_list) / len(year_list)
 
     @property
     def make(self):
@@ -20,6 +32,19 @@ class Car:
             raise ValueError("Make must be at least 3 characters long!")
         else:
             self._make = value
+
+    # Deliverable # 1 solution code
+    @property
+    def model(self):
+        return self._model
+    
+    # Deliverable # 1 solution code
+    @model.setter
+    def model(self, value):
+        if hasattr(self, 'model') or not (type(value) == str):
+            raise Exception("Model cannot be changed and must be a string!")
+        else:
+            self._model = value
 
     @property
     def year(self):
