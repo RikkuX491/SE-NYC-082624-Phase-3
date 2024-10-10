@@ -21,7 +21,7 @@ Write your code in `lib/car.py` (the `car.py` file in the `lib` directory / fold
 
 1. Create a property for the `model` instance variable. For the setter method, the `model` cannot be changed after it is initialized and must be a `str`. If the `model` instance variable already exists and there is an attempt to change its value, or if the value is not a `str`, raise an `Exception` with the message `"Model cannot be changed and must be a string!"`.
 
-   - Hint: Use the `has_attr()` function to check for the presence of an attribute within an instance.
+   - Hint: Use the `hasattr()` function to check for the presence of an attribute within an instance.
 
 2. Create a class attribute, `all`. We will use this attribute to keep track of the new `Car` instances that are created from the `Car` class. Set this attribute equal to `[]`. Then in `__init__`, you will need to append the new `Car` instances to the list contained within the `all` class attribute for the `Car` class.
 
