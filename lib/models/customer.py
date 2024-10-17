@@ -176,3 +176,6 @@ class Customer:
         rows = CURSOR.execute(sql, (self.id,)).fetchall()
 
         return [Hotel.instance_from_db(row) for row in rows]
+    
+    def __repr__(self):
+        return f"<Customer # {self.id}: First Name = {self.first_name}, Last Name = {self.last_name}>"

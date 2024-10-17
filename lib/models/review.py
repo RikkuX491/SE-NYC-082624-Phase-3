@@ -28,10 +28,10 @@ class Review:
     
     @text.setter
     def text(self, text_parameter):
-        if(isinstance(text_parameter, str)) and (3 <= len(text_parameter) <= 40):
+        if(isinstance(text_parameter, str)) and (3 <= len(text_parameter) <= 50):
             self._text = text_parameter
         else:
-            raise ValueError("Text must be a string between 3 and 40 characters long!")
+            raise ValueError("Text must be a string between 3 and 50 characters long!")
 
     @property
     def hotel_id(self):
@@ -209,3 +209,6 @@ class Review:
             return Customer.instance_from_db(row)
         else:
             return None
+        
+    def __repr__(self):
+        return f"<Review # {self.id}: Rating = {self.rating}, Text = {self.text}, Hotel ID = {self.hotel_id}, Customer ID = {self.customer_id}>"
