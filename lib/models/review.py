@@ -54,29 +54,6 @@ class Review:
             self._customer_id = customer_id_parameter
         else:
             raise ValueError("Customer ID must be an integer!")
-        
-    def hotel(self):
-        """Return hotel instance associated with current review"""
-
-        from models.hotel import Hotel
-
-        sql = """
-            SELECT hotels.id, hotels.name FROM hotels
-            INNER JOIN reviews
-            ON hotels.id = reviews.hotel_id
-            WHERE reviews.hotel_id = ?
-            GROUP BY hotels.id
-        """
-
-        row = CURSOR.execute(sql, (self.hotel_id,),).fetchone()
-
-        if row:
-            return Hotel.instance_from_db(row)
-        else:
-            return None
-
-    def customer(self):
-        pass
 
     # add new ORM methods after existing methods
     @classmethod
@@ -150,3 +127,26 @@ class Review:
 
         cls.all = [cls.instance_from_db(row) for row in rows]
         return cls.all
+    
+    def hotel(self):
+        """Return hotel instance associated with current review"""
+
+        from models.hotel import Hotel
+
+        sql = """
+            SELECT hotels.id, hotels.name FROM hotels
+            INNER JOIN reviews
+            ON hotels.id = reviews.hotel_id
+            WHERE reviews.hotel_id = ?
+            GROUP BY hotels.id
+        """
+
+        row = CURSOR.execute(sql, (self.hotel_id,),).fetchone()
+
+        if row:
+            return Hotel.instance_from_db(row)
+        else:
+            return None
+
+    def customer(self):
+        pass

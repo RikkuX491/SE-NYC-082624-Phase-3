@@ -30,12 +30,6 @@ class Customer:
             self._last_name = last_name_parameter
         else:
             raise ValueError("Last Name must be a string at least 1 character long!")
-
-    def reviews(self):
-        pass
-    
-    def hotels(self):
-        pass
     
     # add new ORM methods after existing methods
     @classmethod
@@ -107,3 +101,9 @@ class Customer:
 
         cls.all = [cls.instance_from_db(row) for row in rows]
         return cls.all
+    
+    def reviews(self):
+        pass
+    
+    def hotels(self):
+        pass
