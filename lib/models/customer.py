@@ -34,7 +34,7 @@ class Customer:
     # add new ORM methods after existing methods
     @classmethod
     def create_table(cls):
-        # Create a new table to persist the attributes of Customer instances
+        """ Create a new table to persist the attributes of Customer instances """
         
         sql = """
             CREATE TABLE IF NOT EXISTS customers (
@@ -48,7 +48,7 @@ class Customer:
 
     @classmethod
     def drop_table(cls):
-        # Drop the table that persists Customer instances
+        """ Drop the table that persists Customer instances """
 
         sql = """
             DROP TABLE IF EXISTS customers
@@ -83,7 +83,7 @@ class Customer:
     
     @classmethod
     def instance_from_db(cls, row):
-        """Return a Customer object having the attribute values from the table row."""
+        """ Return a Customer object having the attribute values from the table row. """
     
         customer = cls(row[1], row[2])
         customer.id = row[0]
@@ -91,7 +91,7 @@ class Customer:
     
     @classmethod
     def get_all(cls):
-        """Return a list containing a Customer object per row in the table"""
+        """ Return a list containing a Customer object per row in the table """
 
         sql = """
             SELECT * FROM customers
@@ -102,8 +102,77 @@ class Customer:
         cls.all = [cls.instance_from_db(row) for row in rows]
         return cls.all
     
+    @classmethod
+    def find_by_id(cls, id):
+        """ Return a Customer object corresponding to the table row matching the specified primary key """
+
+        sql = """
+            SELECT * FROM customers
+            WHERE id = ?
+        """
+
+        row = CURSOR.execute(sql, (id,)).fetchone()
+
+        if row:
+            return cls.instance_from_db(row)
+        else:
+            return None
+        
+    def update(self):
+        """ Update the table row corresponding to the current Customer instance. """
+
+        sql = """
+            UPDATE customers
+            SET first_name = ?, last_name = ?
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.first_name, self.last_name, self.id))
+        CONN.commit()
+
+    def delete(self):
+        """ Delete the table row corresponding to the current Customer instance and remove it from the all class variable """
+
+        sql = """
+            DELETE FROM customers
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        # Remove the instance from the all class variable
+        Customer.all = [customer for customer in Customer.all if customer.id != self.id]
+    
     def reviews(self):
-        pass
+        """ Return list of reviews associated with current customer """
+
+        from models.review import Review
+
+        sql = """
+            SELECT * FROM reviews
+            WHERE customer_id = ?
+        """
+
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+
+        return [Review.instance_from_db(row) for row in rows]
     
     def hotels(self):
-        pass
+        """ Return list of hotels associated with current customer """
+
+        from models.hotel import Hotel
+
+        sql = """
+            SELECT hotels.id, hotels.name FROM hotels
+            INNER JOIN reviews
+            ON hotels.id = reviews.hotel_id
+            INNER JOIN customers
+            ON customers.id = reviews.customer_id
+            WHERE customers.id = ?
+            GROUP BY hotels.id
+        """
+
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+
+        return [Hotel.instance_from_db(row) for row in rows]

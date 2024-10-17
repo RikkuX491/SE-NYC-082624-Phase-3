@@ -22,7 +22,7 @@ class Hotel:
     # add new ORM methods after existing methods
     @classmethod
     def create_table(cls):
-        # Create a new table to persist the attributes of Hotel instances
+        """ Create a new table to persist the attributes of Hotel instances """
 
         sql = """
             CREATE TABLE IF NOT EXISTS hotels (
@@ -35,7 +35,7 @@ class Hotel:
 
     @classmethod
     def drop_table(cls):
-        # Drop the table that persists Hotel instances
+        """ Drop the table that persists Hotel instances """
 
         sql = """
             DROP TABLE IF EXISTS hotels
@@ -70,7 +70,7 @@ class Hotel:
     
     @classmethod
     def instance_from_db(cls, row):
-        """Return a Hotel object having the attribute values from the table row."""
+        """ Return a Hotel object having the attribute values from the table row. """
     
         hotel = cls(row[1])
         hotel.id = row[0]
@@ -78,7 +78,7 @@ class Hotel:
     
     @classmethod
     def get_all(cls):
-        """Return a list containing a Hotel object per row in the table"""
+        """ Return a list containing a Hotel object per row in the table """
 
         sql = """
             SELECT * FROM hotels
@@ -91,7 +91,7 @@ class Hotel:
     
     @classmethod
     def find_by_id(cls, id):
-        """Return a Hotel object corresponding to the table row matching the specified primary key"""
+        """ Return a Hotel object corresponding to the table row matching the specified primary key """
 
         sql = """
             SELECT * FROM hotels
@@ -106,7 +106,7 @@ class Hotel:
             return None
         
     def update(self):
-        """Update the table row corresponding to the current Hotel instance."""
+        """ Update the table row corresponding to the current Hotel instance. """
 
         sql = """
             UPDATE hotels
@@ -118,7 +118,7 @@ class Hotel:
         CONN.commit()
 
     def delete(self):
-        """Delete the table row corresponding to the current Hotel instance and remove it from the all class variable"""
+        """ Delete the table row corresponding to the current Hotel instance and remove it from the all class variable """
 
         sql = """
             DELETE FROM hotels
@@ -132,7 +132,7 @@ class Hotel:
         Hotel.all = [hotel for hotel in Hotel.all if hotel.id != self.id]
 
     def reviews(self):
-        """Return list of reviews associated with current hotel"""
+        """ Return list of reviews associated with current hotel """
 
         from models.review import Review
 
@@ -141,13 +141,12 @@ class Hotel:
             WHERE hotel_id = ?
         """
 
-        CURSOR.execute(sql, (self.id,),)
-        
-        rows = CURSOR.fetchall()
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+
         return [Review.instance_from_db(row) for row in rows]
     
     def customers(self):
-        """Return list of customers associated with current hotel"""
+        """ Return list of customers associated with current hotel """
 
         from models.customer import Customer
 
@@ -161,7 +160,6 @@ class Hotel:
             GROUP BY customers.id
         """
 
-        CURSOR.execute(sql, (self.id,),)
-    
-        rows = CURSOR.fetchall()
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+
         return [Customer.instance_from_db(row) for row in rows]

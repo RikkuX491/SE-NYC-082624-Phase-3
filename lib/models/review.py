@@ -58,7 +58,7 @@ class Review:
     # add new ORM methods after existing methods
     @classmethod
     def create_table(cls):
-        # Create a new table to persist the attributes of Review instances
+        """ Create a new table to persist the attributes of Review instances """
 
         sql = """
             CREATE TABLE IF NOT EXISTS reviews (
@@ -74,7 +74,7 @@ class Review:
 
     @classmethod
     def drop_table(cls):
-        # Drop the table that persists Review instances
+        """ Drop the table that persists Review instances """
 
         sql = """
             DROP TABLE IF EXISTS reviews
@@ -109,7 +109,7 @@ class Review:
     
     @classmethod
     def instance_from_db(cls, row):
-        """Return a Review object having the attribute values from the table row."""
+        """ Return a Review object having the attribute values from the table row. """
 
         review = cls(row[1], row[2], row[3], row[4])
         review.id = row[0]
@@ -117,7 +117,7 @@ class Review:
     
     @classmethod
     def get_all(cls):
-        """Return a list containing a Review object per row in the table"""
+        """ Return a list containing a Review object per row in the table """
 
         sql = """
             SELECT * FROM reviews
@@ -128,8 +128,50 @@ class Review:
         cls.all = [cls.instance_from_db(row) for row in rows]
         return cls.all
     
+    @classmethod
+    def find_by_id(cls, id):
+        """ Return a Review object corresponding to the table row matching the specified primary key """
+
+        sql = """
+            SELECT * FROM reviews
+            WHERE id = ?
+        """
+
+        row = CURSOR.execute(sql, (id,)).fetchone()
+
+        if row:
+            return cls.instance_from_db(row)
+        else:
+            return None
+        
+    def update(self):
+        """ Update the table row corresponding to the current Review instance. """
+
+        sql = """
+            UPDATE reviews
+            SET rating = ?, text = ?, hotel_id = ?, customer_id = ?
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.rating, self.text, self.hotel_id, self.customer_id, self.id))
+        CONN.commit()
+
+    def delete(self):
+        """ Delete the table row corresponding to the current Review instance and remove it from the all class variable """
+
+        sql = """
+            DELETE FROM reviews
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        # Remove the instance from the all class variable
+        Review.all = [review for review in Review.all if review.id != self.id]
+    
     def hotel(self):
-        """Return hotel instance associated with current review"""
+        """ Return hotel instance associated with current review """
 
         from models.hotel import Hotel
 
@@ -141,7 +183,7 @@ class Review:
             GROUP BY hotels.id
         """
 
-        row = CURSOR.execute(sql, (self.hotel_id,),).fetchone()
+        row = CURSOR.execute(sql, (self.hotel_id,)).fetchone()
 
         if row:
             return Hotel.instance_from_db(row)
@@ -149,4 +191,21 @@ class Review:
             return None
 
     def customer(self):
-        pass
+        """ Return customer instance associated with current review """
+
+        from models.customer import Customer
+
+        sql = """
+            SELECT customers.id, customers.first_name, customers.last_name FROM customers
+            INNER JOIN reviews
+            ON customers.id = reviews.customer_id
+            WHERE reviews.customer_id = ?
+            GROUP BY customers.id
+        """
+
+        row = CURSOR.execute(sql, (self.customer_id,)).fetchone()
+
+        if row:
+            return Customer.instance_from_db(row)
+        else:
+            return None
