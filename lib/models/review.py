@@ -56,9 +56,97 @@ class Review:
             raise ValueError("Customer ID must be an integer!")
         
     def hotel(self):
-        pass
+        """Return hotel instance associated with current review"""
+
+        from models.hotel import Hotel
+
+        sql = """
+            SELECT hotels.id, hotels.name FROM hotels
+            INNER JOIN reviews
+            ON hotels.id = reviews.hotel_id
+            WHERE reviews.hotel_id = ?
+            GROUP BY hotels.id
+        """
+
+        row = CURSOR.execute(sql, (self.hotel_id,),).fetchone()
+
+        if row:
+            return Hotel.instance_from_db(row)
+        else:
+            return None
 
     def customer(self):
         pass
 
     # add new ORM methods after existing methods
+    @classmethod
+    def create_table(cls):
+        # Create a new table to persist the attributes of Review instances
+
+        sql = """
+            CREATE TABLE IF NOT EXISTS reviews (
+                id INTEGER PRIMARY KEY,
+                rating INTEGER,
+                text TEXT,
+                hotel_id INTEGER,
+                customer_id INTEGER
+            )
+        """
+
+        CURSOR.execute(sql)
+
+    @classmethod
+    def drop_table(cls):
+        # Drop the table that persists Review instances
+
+        sql = """
+            DROP TABLE IF EXISTS reviews
+        """
+
+        CURSOR.execute(sql)
+
+    def save(self):
+        """ Insert a new row with the rating, text, hotel_id and customer_id values of the current Review instance.
+            Update object id attribute using the primary key value of new row.
+        """
+
+        sql = """
+            INSERT INTO reviews (rating, text, hotel_id, customer_id)
+            VALUES (?, ?, ?, ?)
+        """
+
+        CURSOR.execute(sql, (self.rating, self.text, self.hotel_id, self.customer_id))
+        CONN.commit()
+
+        self.id = CURSOR.lastrowid
+
+        Review.all.append(self)
+
+    @classmethod
+    def create(cls, rating, text, hotel_id, customer_id):
+        """ Initialize a new Review instance and save the object to the database """
+
+        review = cls(rating, text, hotel_id, customer_id)
+        review.save()
+        return review
+    
+    @classmethod
+    def instance_from_db(cls, row):
+        """Return a Review object having the attribute values from the table row."""
+
+        review = cls(row[1], row[2], row[3], row[4])
+        review.id = row[0]
+        return review
+    
+    @classmethod
+    def get_all(cls):
+        """Return a list containing a Review object per row in the table"""
+
+        sql = """
+            SELECT * FROM reviews
+        """
+
+        rows = CURSOR.execute(sql).fetchall()
+
+        cls.all = [cls.instance_from_db(row) for row in rows]
+        return cls.all
