@@ -334,7 +334,7 @@ In `lib/models/hotel.py`, add the following instance method in the `Hotel` model
 def reviews(self):
     """Return list of reviews associated with current hotel"""
 
-    from review import Review
+    from models.review import Review
 
     sql = """
         SELECT * FROM reviews
@@ -359,7 +359,7 @@ In `lib/models/review.py`, add the following instance method in the `Review` mod
 def hotel(self):
     """Return hotel instance associated with current review"""
 
-    from hotel import Hotel
+    from models.hotel import Hotel
 
     sql = """
         SELECT hotels.id, hotels.name FROM hotels
@@ -389,7 +389,7 @@ In `lib/models/hotel.py`, add the following instance method in the `Hotel` model
 def customers(self):
     """Return list of customers associated with current hotel"""
 
-    from customer import Customer
+    from models.customer import Customer
 
     sql = """
         SELECT customers.id, customers.first_name, customers.last_name FROM customers
